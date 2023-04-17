@@ -41,6 +41,9 @@ namespace NETLibrary {
 			Send   = null;
 		}
 		public String ListenData(String IP,String port) {
+			if (SocketNull("Listen")) {
+				return "";
+			}
 			Listen.Bind(new IPEndPoint(IPAddress.Parse(IP),int.Parse(port)));
 			Listen.Listen(1);
 			Socket ListenData = Listen.Accept();
@@ -49,6 +52,9 @@ namespace NETLibrary {
 			return Encoding.UTF8.GetString(bytes);
 		}
 		public String ListenData(String IP,String port,int ListenNum) {
+			if (SocketNull("Listen")) {
+				return "";
+			}
 			if (ListenNum < 0) {
 				return "";
 			}
@@ -60,6 +66,9 @@ namespace NETLibrary {
 			return Encoding.UTF8.GetString(bytes);
 		}
 		public void SendData(String IP,String port,String data) {
+			if (SocketNull("Send")) {
+				return;
+			}
 			Send.Connect(new IPEndPoint(IPAddress.Parse(IP),int.Parse(port)));
 			Send.Send(Encoding.UTF8.GetBytes(data));
 		}
@@ -70,8 +79,11 @@ namespace NETLibrary {
 			Send.Close();
 		}
 
-		private bool SocketNull() {
-			if (Listen == null & Send == null) {
+		private bool SocketNull(String Mod) {
+			if (Listen == null & Mod.Equals("Listen")) {
+				return true;
+			}
+			if (Send == null & Mod.Equals("Send")) {
 				return true;
 			}
 			return false;
