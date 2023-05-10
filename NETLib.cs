@@ -137,11 +137,17 @@ namespace NETLibrary {
 	public class Address {
 		private IPEndPoint addr;
 
-		public Address(String IP,String Port) {
-			new Address(IP,int.Parse(Port));
-		}
 		public Address(String IP,int Port) {
 			addr = new IPEndPoint(IPAddress.Parse(IP),Port);
+		}
+		public Address(int Port) {
+			addr = new IPEndPoint(IPAddress.Any,Port);
+		}
+		public Address(String IP) {
+			addr = new IPEndPoint(IPAddress.Parse(IP),0);
+		}
+		public Address() {
+			addr = new IPEndPoint(IPAddress.Any,0);
 		}
 		public IPEndPoint GetAddress() {
 			return addr;
