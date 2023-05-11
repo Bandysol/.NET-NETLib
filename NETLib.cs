@@ -15,9 +15,9 @@ namespace NETLibrary {
 		}
 		public void StartListen(ref String returndata) {
 			Socket ListenData = Listen.Accept();
-			byte[] bytes = new byte[4294967296];
+			byte[] bytes = new byte[65536];
 			ListenData.Receive(bytes,bytes.Length,0);
-			returndata = Encoding.UTF8.GetString(bytes);
+			returndata = Encoding.UTF8.GetString(bytes).TrimEnd('\0');
 		}
 		public void SetSendData(Address addr) {
 			Send.Connect(addr.GetAddress());
@@ -95,12 +95,12 @@ namespace NETLibrary {
 
 		public Connect() {}
 		public void ConnectTo(Address addr) {
-			if (!ConnectStatus) {return;}
+			if (ConnectStatus) {return;}
 			ConnectSocket.Connect(addr.GetAddress());
 			ConnectStatus = true;
 		}
 		public void AcceptConnection(Address addr) {
-			if (!ConnectStatus) {return;}
+			if (ConnectStatus) {return;}
 			ConnectSocket.Bind(addr.GetAddress());
 			ConnectSocket.Listen(1);
 			ConnectSocket = ConnectSocket.Accept();
@@ -110,9 +110,9 @@ namespace NETLibrary {
 			ConnectSocket.Send(Encoding.UTF8.GetBytes(data));
 		}
 		public void Listen(ref String returndata) {
-			byte[] bytes = new byte[4294967296];
+			byte[] bytes = new byte[65536];
 			ConnectSocket.Receive(bytes,bytes.Length,0);
-			returndata = Encoding.UTF8.GetString(bytes);
+			returndata = Encoding.UTF8.GetString(bytes).TrimEnd('\0');
 		}
 		public void Clear() {
 			ConnectSocket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
