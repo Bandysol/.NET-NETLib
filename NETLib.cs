@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 
 namespace NETLibrary {
+	[Obsolete("请使用 Connect 类。它将在 2023.5.15 移除",false)]
 	public class NET {
 		private Socket Listen = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
 		private Socket Send   = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
@@ -36,6 +37,7 @@ namespace NETLibrary {
 			Send.Close();
 		}
 	}
+	[Obsolete("请使用 Connects 类。它将在 2023.5.15 移除",false)]
 	public class Communication {
 		private NET[]     ListenAndSend = new NET[256];
 		private Address[] SendAddress   = new Address[256];
@@ -123,7 +125,7 @@ namespace NETLibrary {
 			ConnectSocket.Close();
 		}
 	}
-	/*public class Connects {
+	public class Connects {
 		private Connect[] ListenAndSend = new Connect[256];
 		private Address[] Address       = new Address[256];
 		private int       ConnectKey    = 0;
@@ -133,7 +135,39 @@ namespace NETLibrary {
 			ListenAndSend = new Connect[Number];
 			Address       = new Address[Number];
 		}
-	}*/
+		public int SetConnect(Address addr) {
+			Address[ConnectKey] = addr;
+			ListenAndSend[ConnectKey] = new Connect();
+			ConnectKey ++;
+			return ConnectKey - 1;
+		}
+		public void SetConnect(int Key,Address addr) {
+			Address[Key] = addr;
+			ListenAndSend[Key] = new Connect();
+		}
+		public void ConnectTo(int Key) {
+			ListenAndSend[Key].ConnectTo(Address[Key]);
+		}
+		public void AcceptConnection(int Key) {
+			ListenAndSend[Key].AcceptConnection(Address[Key]);
+		}
+		public void Send(int Key,String data) {
+			ListenAndSend[Key].Send(data);
+		}
+		public void Listen(int Key,ref String returndata) {
+			ListenAndSend[Key].Listen(ref returndata);
+		}
+		public void Clear() {
+			for (int i = 0;i < ListenAndSend.Length;i ++) {
+				ListenAndSend[i].Clear();
+			}
+		}
+		public void Close() {
+			for (int i = 0;i < ListenAndSend.Length;i ++) {
+				ListenAndSend[i].Close();
+			}
+		}
+	}
 	public class Address {
 		private IPEndPoint addr;
 
